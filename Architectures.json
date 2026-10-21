@@ -1,0 +1,633 @@
+{
+  "meta": {
+    "name": "Ajwaa",
+    "arabicName": "أجواء",
+    "tagline": "الطقس والوقت، أينما كنت — Weather & time, wherever you are",
+    "version": "1.0.0",
+    "author": "Mohamed Ibrahim Mustafa",
+    "repository": "https://github.com/mibrahimmustafa/Weather_details_by_location",
+    "documentedAt": "2026-10-21",
+    "purpose": "Machine-readable description of Ajwaa's software structure, module responsibilities, data flow, storage, external dependencies and quality gates.",
+    "audience": [
+      "maintainers extending the app",
+      "reviewers auditing architecture and privacy",
+      "automation that needs to inspect layers or endpoints"
+    ]
+  },
+
+  "stack": {
+    "language": { "name": "Dart", "version": "3.13.4", "sdkConstraint": "^3.13.4" },
+    "framework": { "name": "Flutter", "version": "3.47.5", "channel": "stable" },
+    "stateManagement": {
+      "package": "flutter_riverpod",
+      "version": "^3.4.3",
+      "style": "Notifier / AsyncNotifier, no code generation",
+      "why": "Compile-safe, testable overrides for network and storage, and no build_runner step to keep the repository reproducible."
+    },
+    "persistence": {
+      "package": "shared_preferences",
+      "version": "^2.5.6",
+      "why": "Small JSON documents only; no database is needed and the web target gets localStorage for free."
+    },
+    "networking": {
+      "package": "http",
+      "version": "^1.6.0",
+      "wrappedBy": "lib/core/network/api_client.dart",
+      "why": "Minimal surface, mockable with http/testing MockClient, works on every platform."
+    },
+    "localization": {
+      "tool": "flutter gen-l10n",
+      "format": "ARB",
+      "source": ["lib/l10n/app_ar.arb", "lib/l10n/app_en.arb"],
+      "generated": "lib/l10n/app_localizations*.dart",
+      "why": "First-party generation: no extra dependency and type-safe getters."
+    },
+    "fonts": {
+      "family": "PlexArabic",
+      "source": "IBM Plex Sans Arabic, static weights 300-700, bundled under assets/fonts",
+      "license": "SIL Open Font License 1.1 (assets/fonts/OFL-IBMPlexSansArabic.txt)",
+      "why": "One family covers Arabic and Latin, so both locales share rhythm and vertical metrics."
+    },
+    "platforms": {
+      "android": { "applicationId": "com.mibrahimmustafa.ajwaa", "minSdk": "flutter default", "configured": true, "built": false, "reasonNotBuilt": "Android SDK not installed on the development machine" },
+      "ios": { "bundleId": "com.mibrahimmustafa.ajwaa", "configured": true, "built": false, "reasonNotBuilt": "requires macOS and Xcode" },
+      "web": { "renderer": "CanvasKit (default)", "installable": true, "built": true, "verifiedVisually": true }
+    }
+  },
+
+  "principles": [
+    {
+      "id": "one-way-dependencies",
+      "statement": "presentation -> state -> data -> domain -> core. A layer may only import from layers to its right.",
+      "enforcedBy": "review + the fact that domain/ imports nothing from Flutter, data/ or presentation/"
+    },
+    {
+      "id": "pure-domain",
+      "statement": "Business rules (units, WMO codes, dust/UV/AQI classification, alert thresholds, distance) are plain Dart with no Flutter imports.",
+      "enforcedBy": "test/alerts_test.dart, test/units_formatters_test.dart"
+    },
+    {
+      "id": "defensive-boundaries",
+      "statement": "Every external boundary (HTTP payload, disk payload, preferences) is parsed defensively and degrades instead of throwing.",
+      "enforcedBy": "lib/core/utils/json_read.dart, lib/data/parsers/*, test/parsers_test.dart, test/stores_test.dart, test/sheets_test.dart"
+    },
+    {
+      "id": "raw-payload-cache",
+      "statement": "The cache stores raw API JSON, never serialized domain models, so offline data always passes through the same tested parsers as live data.",
+      "enforcedBy": "lib/data/repositories/weather_cache.dart"
+    },
+    {
+      "id": "bilingual-by-design",
+      "statement": "No user-visible string is hard-coded in a widget; layout uses start/end and directional icons so RTL is automatic.",
+      "enforcedBy": "lib/l10n/*.arb, test/widget_test.dart (directionality assertion)"
+    },
+    {
+      "id": "convert-at-the-edge",
+      "statement": "All values are stored and computed in metric; imperial conversion happens only in the formatter consumed by widgets.",
+      "enforcedBy": "lib/domain/units.dart, lib/core/utils/formatters.dart"
+    },
+    {
+      "id": "no-secrets",
+      "statement": "There is no API key, token or backend. The app is fully usable after a clone.",
+      "enforcedBy": "lib/core/constants/app_info.dart contains public URLs only"
+    }
+  ],
+
+  "layers": [
+    {
+      "name": "core",
+      "path": "lib/core",
+      "responsibility": "Cross-cutting foundations with no knowledge of weather.",
+      "mayDependOn": [],
+      "modules": [
+        {
+          "path": "lib/core/constants/app_info.dart",
+          "symbols": ["AppInfo", "ApiEndpoints", "StorageKeys"],
+          "notes": "App name, version, public URLs and every storage key in one place."
+        },
+        {
+          "path": "lib/core/constants/suggested_cities.dart",
+          "symbols": ["kSuggestedCities"],
+          "notes": "Offline starter list (Cairo first) so the first launch never shows an empty screen."
+        },
+        {
+          "path": "lib/core/errors/app_failure.dart",
+          "symbols": ["AppFailure", "FailureKind"],
+          "notes": "Typed failure with kinds: network, timeout, server, rateLimited, malformed, permission, locationUnavailable, unknown. Localized into copy by lib/core/utils/localized_text.dart."
+        },
+        {
+          "path": "lib/core/network/api_client.dart",
+          "symbols": ["ApiClient"],
+          "notes": "JSON GET with 18s timeout, 3 attempts, retry only for network/timeout/5xx/429 with linear backoff, utf8.decode(bodyBytes, allowMalformed: true), and a descriptive User-Agent."
+        },
+        {
+          "path": "lib/core/theme/app_theme.dart",
+          "symbols": ["AppTheme", "AppColors", "AppSpacing", "AppRadius", "AjwaaTheme"],
+          "notes": "Light and dark ColorScheme, text theme bound to PlexArabic, and a context extension exposing colors/spacing/texts."
+        },
+        {
+          "path": "lib/core/utils/formatters.dart",
+          "symbols": ["Fmt"],
+          "notes": "Temperature, wind, distance, precipitation, percent, clock from UTC offset, weekday/month names, relative 'updated x ago' and day labels. Western digits for numbers in both locales."
+        },
+        {
+          "path": "lib/core/utils/json_read.dart",
+          "symbols": ["readMap", "readList", "readString", "readStringOrNull", "readDoubleOrNull", "readInt", "readIntOrNull"],
+          "notes": "Total functions: they never throw on missing or mistyped keys."
+        },
+        {
+          "path": "lib/core/utils/localized_text.dart",
+          "symbols": ["failureMessage", "conditionLabel", "dustLabel", "uvLabel", "aqiLabel", "alertTitle", "alertBody"],
+          "notes": "Maps domain enums and failures to localized copy."
+        },
+        {
+          "path": "lib/core/widgets/",
+          "symbols": ["PressableScale", "SurfaceCard", "Reveal", "Shimmer", "SkeletonBox"],
+          "notes": "Shared interaction and motion primitives."
+        }
+      ]
+    },
+    {
+      "name": "domain",
+      "path": "lib/domain",
+      "responsibility": "Pure rules and vocabulary. No Flutter, no I/O.",
+      "mayDependOn": ["core"],
+      "modules": [
+        {
+          "path": "lib/domain/units.dart",
+          "symbols": ["UnitSystem", "Units"],
+          "notes": "metric | imperial; temperature, wind, distance and precipitation conversion plus code round-trip."
+        },
+        {
+          "path": "lib/domain/weather_condition.dart",
+          "symbols": ["WeatherCondition", "conditionFromWmoCode"],
+          "notes": "Maps WMO 4677 codes to a small condition enum (clear, partlyCloudy, cloudy, fog, drizzle, rain, heavyRain, snow, thunder, hail) used by glyphs, scenes and copy."
+        },
+        {
+          "path": "lib/domain/environment_levels.dart",
+          "symbols": ["DustLevel", "UvLevel", "AqiLevel", "dustLevelFor", "uvLevelFor", "aqiLevelFor"],
+          "notes": "dust <20 / <50 / <100 / >=100 ug/m3; UV <3 / <6 / <8 / <11 / >=11; US AQI bands 50/100/150/200/300."
+        },
+        {
+          "path": "lib/domain/alerts.dart",
+          "symbols": ["WeatherAlert", "AlertSeverity", "AlertKind", "buildWeatherAlerts"],
+          "notes": "Rules engine, see alertRules below. Output is sorted by severity then kind."
+        },
+        {
+          "path": "lib/domain/geo.dart",
+          "symbols": ["distanceKm"],
+          "notes": "Haversine distance used for storm proximity and cache invalidation."
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "path": "lib/data",
+      "responsibility": "Talk to the outside world: models, parsers, services, stores and the repository that merges them.",
+      "mayDependOn": ["domain", "core"],
+      "modules": [
+        {
+          "path": "lib/data/models/city.dart",
+          "symbols": ["City"],
+          "notes": "id, name, lat/lon, country, admin1, countryCode, timezone, isCurrentLocation. Identity is the id, so list operations are cheap."
+        },
+        {
+          "path": "lib/data/models/weather_bundle.dart",
+          "symbols": ["WeatherBundle", "CurrentWeather", "HourlyPoint", "DailyPoint", "AirQuality"],
+          "notes": "The single view model consumed by the UI. Carries timezoneId, utcOffsetSeconds, fetchedAt, stormsAvailable and isFromCache."
+        },
+        {
+          "path": "lib/data/models/storm.dart",
+          "symbols": ["Storm", "StormSeverity"],
+          "notes": "name, coordinates, windKmh, distanceKm, alert level, source link and observation time."
+        },
+        {
+          "path": "lib/data/models/app_settings.dart",
+          "symbols": ["AppSettings"],
+          "notes": "localeCode, unitSystem, themeMode, hasSeenWelcome. Unknown enum names coerce to safe defaults."
+        },
+        {
+          "path": "lib/data/parsers/forecast_parser.dart",
+          "symbols": ["ForecastParser"],
+          "notes": "Open-Meteo current/hourly/daily -> CurrentWeather, HourlyPoint[], DailyPoint[]. Derives dew point (Magnus), visibility from the nearest hourly point and current UV from the daily maximum."
+        },
+        {
+          "path": "lib/data/parsers/air_quality_parser.dart",
+          "symbols": ["AirQualityParser", "AirQualitySnapshot"],
+          "notes": "Extracts dust, PM10, PM2.5, US/EU AQI, UV plus hourly dust and PM10 keyed by epoch second for chart and per-hour joins."
+        },
+        {
+          "path": "lib/data/parsers/storm_parser.dart",
+          "symbols": ["StormParser"],
+          "notes": "Normalizes both NASA EONET and GDACS shapes, converts knots to km/h, computes distance and sorts by proximity."
+        },
+        {
+          "path": "lib/data/services/forecast_api.dart",
+          "symbols": ["ForecastApi"],
+          "notes": "Builds the Open-Meteo forecast query (current, hourly, daily, timezone=auto) and returns the raw map."
+        },
+        {
+          "path": "lib/data/services/air_quality_api.dart",
+          "symbols": ["AirQualityApi"],
+          "notes": "Open-Meteo air-quality query; optional, failure degrades the dust section instead of the screen."
+        },
+        {
+          "path": "lib/data/services/geocoding_api.dart",
+          "symbols": ["GeocodingApi"],
+          "notes": "Open-Meteo geocoding search (language-aware, de-duplicated) and BigDataCloud reverse geocoding with timezone extraction."
+        },
+        {
+          "path": "lib/data/services/storm_api.dart",
+          "symbols": ["StormApi"],
+          "notes": "NASA EONET first; falls back to GDACS when EONET is empty or unreachable."
+        },
+        {
+          "path": "lib/data/services/location_service.dart",
+          "symbols": ["LocationService"],
+          "notes": "geolocator wrapper: permission flow, current position, openSettings()."
+        },
+        {
+          "path": "lib/data/repositories/settings_store.dart",
+          "symbols": ["SettingsStore"],
+          "notes": "Reads/writes AppSettings; corrupt or foreign-shaped data falls back to device-language defaults."
+        },
+        {
+          "path": "lib/data/repositories/cities_store.dart",
+          "symbols": ["CitiesStore", "CitiesSnapshot"],
+          "notes": "Persists the city list and selection; malformed entries are skipped and a dangling selectedId is repaired."
+        },
+        {
+          "path": "lib/data/repositories/weather_cache.dart",
+          "symbols": ["WeatherCache", "CachedWeatherPayload"],
+          "notes": "Raw-payload cache keyed by city id, pruned to the 8 most recent entries; writes are best-effort."
+        },
+        {
+          "path": "lib/data/repositories/weather_repository.dart",
+          "symbols": ["WeatherRepository"],
+          "notes": "Orchestrates forecast + air quality + storms, merges them into WeatherBundle, applies the freshness/location cache policy and serves stale data when offline."
+        }
+      ]
+    },
+    {
+      "name": "state",
+      "path": "lib/state",
+      "responsibility": "Riverpod wiring and controllers. The only layer widgets talk to.",
+      "mayDependOn": ["data", "domain", "core"],
+      "modules": [
+        {
+          "path": "lib/state/providers.dart",
+          "symbols": ["sharedPreferencesProvider", "apiClientProvider", "stormClientProvider", "forecastApiProvider", "airQualityApiProvider", "stormApiProvider", "geocodingApiProvider", "locationServiceProvider", "weatherCacheProvider", "weatherRepositoryProvider", "settingsStoreProvider", "citiesStoreProvider"],
+          "notes": "Every dependency is a provider, so tests override only preferences and two HTTP clients."
+        },
+        {
+          "path": "lib/state/settings_controller.dart",
+          "symbols": ["settingsProvider", "SettingsController"],
+          "notes": "setLocale, setUnitSystem, setThemeMode, markWelcomeSeen; writes through SettingsStore on every change."
+        },
+        {
+          "path": "lib/state/cities_controller.dart",
+          "symbols": ["citiesProvider", "selectedCityProvider", "CitiesController", "CitiesState"],
+          "notes": "Add/remove/select cities, deduplicate by id, persist, keep Cairo as the offline default."
+        },
+        {
+          "path": "lib/state/weather_controller.dart",
+          "symbols": ["weatherProvider", "WeatherController"],
+          "notes": "AsyncNotifier keyed on the selected city: load, force refresh, expose AppFailure to the error view."
+        },
+        {
+          "path": "lib/state/location_controller.dart",
+          "symbols": ["locationProvider", "LocationController", "LocationState", "LocationStatus"],
+          "notes": "idle -> locating -> found|failed; resolves GPS, reverse-geocodes and hands the City to CitiesController."
+        }
+      ]
+    },
+    {
+      "name": "presentation",
+      "path": "lib/presentation",
+      "responsibility": "Widgets, screens, sheets, theme palettes and illustrations. Stateless where possible.",
+      "mayDependOn": ["state", "data", "domain", "core"],
+      "modules": [
+        {
+          "path": "lib/presentation/home/home_screen.dart",
+          "symbols": ["HomeScreen"],
+          "notes": "Composes the whole page, owns the 10-minute refresh timer, pull-to-refresh, welcome scheduling and the atmospheric background."
+        },
+        {
+          "path": "lib/presentation/home/widgets/hero_card.dart",
+          "symbols": ["HeroCard"],
+          "notes": "City chip, live condition, temperature, feels-like, high/low, local clock and refresh action."
+        },
+        {
+          "path": "lib/presentation/home/widgets/alerts_section.dart",
+          "symbols": ["AlertsSection"],
+          "notes": "Renders buildWeatherAlerts output with severity colours; tap for the explanation sheet."
+        },
+        {
+          "path": "lib/presentation/home/widgets/hourly_section.dart",
+          "symbols": ["HourlySection"],
+          "notes": "Horizontal 24-hour strip with temperature, condition glyph, rain chance and wind."
+        },
+        {
+          "path": "lib/presentation/home/widgets/rain_dust_section.dart",
+          "symbols": ["RainDustSection"],
+          "notes": "Dust concentration and 24-hour curve, PM10/PM2.5/AQI, rain probability/total and the next-wet-hour strip."
+        },
+        {
+          "path": "lib/presentation/home/widgets/details_section.dart",
+          "symbols": ["DetailsSection"],
+          "notes": "Humidity/dew point, wind and gusts, rain chance, UV, pressure, visibility, cloud cover with classifications."
+        },
+        {
+          "path": "lib/presentation/home/widgets/storms_section.dart",
+          "symbols": ["StormsSection"],
+          "notes": "Active cyclones with distance, wind and alert badge; explains the source and the empty state."
+        },
+        {
+          "path": "lib/presentation/home/widgets/daily_section.dart",
+          "symbols": ["DailySection"],
+          "notes": "7-day rows with week-normalized temperature range bars and per-day detail sheet."
+        },
+        {
+          "path": "lib/presentation/home/widgets/footer.dart",
+          "symbols": ["Footer"],
+          "notes": "Attribution links, version and the key-less data note."
+        },
+        {
+          "path": "lib/presentation/home/widgets/loading_skeleton.dart",
+          "symbols": ["LoadingSkeleton"],
+          "notes": "Shimmer placeholder mirroring the real layout to avoid layout shift."
+        },
+        {
+          "path": "lib/presentation/home/widgets/error_view.dart",
+          "symbols": ["ErrorView"],
+          "notes": "Localized failure message with retry."
+        },
+        {
+          "path": "lib/presentation/sheets/city_picker_sheet.dart",
+          "symbols": ["CityPickerSheet"],
+          "notes": "380 ms debounced search, saved cities, popular chips, GPS tile, dismissible removal."
+        },
+        {
+          "path": "lib/presentation/sheets/settings_sheet.dart",
+          "symbols": ["SettingsSheet"],
+          "notes": "Theme, units and language segmented buttons, plus privacy, data sources, about and licenses."
+        },
+        {
+          "path": "lib/presentation/sheets/welcome_sheet.dart",
+          "symbols": ["WelcomeSheet"],
+          "notes": "First-run choice: allow location, pick a city, or continue without; remembers the decision."
+        },
+        {
+          "path": "lib/presentation/sheets/info_sheet.dart",
+          "symbols": ["showInfoSheet", "DetailRow"],
+          "notes": "Generic explainer sheet so every number can describe what it means."
+        },
+        {
+          "path": "lib/presentation/widgets/",
+          "symbols": ["AjwaaMark", "AjwaaAppIcon", "WeatherScene", "WeatherGlyph", "SunPath", "LiveClock", "LanguageSwitch", "SectionHeader", "charts"],
+          "notes": "Vector brand mark, animated atmosphere, condition glyphs, sun arc, ticking clock, charts."
+        },
+        {
+          "path": "lib/presentation/theme/weather_palette.dart",
+          "symbols": ["WeatherPalette"],
+          "notes": "Maps condition + day/night to background gradients and accent colours."
+        }
+      ]
+    },
+    {
+      "name": "bootstrap",
+      "path": "lib/main.dart, lib/app.dart",
+      "responsibility": "Start-up order and root widget.",
+      "mayDependOn": ["presentation", "state", "core"],
+      "modules": [
+        {
+          "path": "lib/main.dart",
+          "symbols": ["main"],
+          "notes": "ensureInitialized -> initializeDateFormatting (localized DateFormat) -> SharedPreferences -> ProviderScope override -> runApp. Preferences are resolved before the first frame so language and theme never flash."
+        },
+        {
+          "path": "lib/app.dart",
+          "symbols": ["AjwaaApp"],
+          "notes": "MaterialApp with generated title, locale from settings, both themes, Global*Localizations delegates and a scroll behaviour that accepts mouse, stylus and trackpad."
+        }
+      ]
+    }
+  ],
+
+  "runtimeFlow": {
+    "coldStart": [
+      "main() initializes the binding and intl date symbols.",
+      "SharedPreferences is read once and injected through sharedPreferencesProvider.",
+      "SettingsController reads AppSettings; a corrupt payload falls back to the device language.",
+      "CitiesController restores the saved list, or seeds kSuggestedCities with Cairo selected.",
+      "WeatherController loads the selected city: fresh cache (< 10 min and < 5 km) short-circuits the network.",
+      "The first frame renders the skeleton; the resolved WeatherBundle replaces it with a Reveal animation.",
+      "If hasSeenWelcome is false the welcome sheet is presented once."
+    ],
+    "refresh": [
+      "Sources: 10-minute Timer in HomeScreen, pull-to-refresh, the hero refresh button, and a change of selected city.",
+      "WeatherRepository.load runs forecast, air quality and storms concurrently; air and storms are optional.",
+      "The merged payload is written to the raw cache, then rendered.",
+      "Any failure with a compatible cached payload yields the cached bundle flagged isFromCache and shows the offline banner."
+    ],
+    "citySelection": [
+      "CityPickerSheet -> GeocodingApi.search (debounced) -> CitiesController.add -> selectedCityProvider",
+      "weatherProvider rebuilds for the new city; the sheet closes and the hero cross-fades."
+    ],
+    "location": [
+      "LocationController.locate -> LocationService permission flow -> geolocator position",
+      "GeocodingApi.reverse (BigDataCloud) -> City(isCurrentLocation: true, id: 'current-location')",
+      "The city is upserted in CitiesController and selected."
+    ]
+  },
+
+  "dataFlow": {
+    "direction": "UI -> controller -> repository -> services -> HTTP; responses -> parsers -> models -> repository -> controller -> UI",
+    "merge": {
+      "required": ["forecast"],
+      "optional": ["airQuality", "storms"],
+      "joinKey": "epoch seconds, so hourly dust/PM10 align with hourly forecast points",
+      "degradation": "A missing optional source removes only its section; stormsAvailable records whether the cyclone source responded."
+    },
+    "derived": {
+      "dewPoint": "Magnus formula from temperature and relative humidity",
+      "visibility": "nearest hourly visibility value to the current observation",
+      "currentUv": "daily uv_index_max when the air-quality source has no current UV",
+      "alerts": "computed in the domain layer from the merged bundle"
+    }
+  },
+
+  "alertRules": [
+    { "kind": "heat", "firesWhen": "feelsLike >= 38 C", "severeWhen": "feelsLike >= 43 C" },
+    { "kind": "cold", "firesWhen": "feelsLike <= 0 C", "severeWhen": "feelsLike <= -10 C" },
+    { "kind": "wind", "firesWhen": "max(gust, speed) >= 40 km/h", "severeWhen": ">= 70 km/h" },
+    { "kind": "rain", "firesWhen": "current >= 2.5 mm or next 6 h >= 10 mm", "severeWhen": "current >= 8 mm or next 6 h >= 25 mm" },
+    { "kind": "dust", "firesWhen": "dust >= 50 ug/m3 or PM10 >= 150 ug/m3", "severeWhen": "dust >= 150 or PM10 >= 300" },
+    { "kind": "uv", "firesWhen": "UV >= 8", "severeWhen": "UV >= 11" },
+    { "kind": "thunder", "firesWhen": "WMO code >= 95", "severeWhen": "code >= 96" },
+    { "kind": "storm", "firesWhen": "nearest cyclone <= 1000 km", "severeWhen": "<= 500 km" }
+  ],
+
+  "cache": {
+    "freshnessTtl": "10 minutes",
+    "locationToleranceKm": 5,
+    "maxEntries": 8,
+    "strategy": "stale-while-offline",
+    "payload": "raw forecast, air quality and storm JSON plus fetchedAt and the coordinates they belong to",
+    "why": "Reparsing keeps one code path and lets parser fixes immediately apply to cached data."
+  },
+
+  "storage": {
+    "backend": "SharedPreferences (Android SharedPreferences, iOS NSUserDefaults, web localStorage with the flutter. prefix)",
+    "keys": [
+      { "key": "ajwaa.settings.v1", "format": "JSON string", "shape": "{ localeCode, unitSystem, themeMode, hasSeenWelcome }" },
+      { "key": "ajwaa.cities.v1", "format": "JSON string", "shape": "{ cities: City[], selectedId }" },
+      { "key": "ajwaa.selectedCity.v1", "format": "string", "shape": "selected city id" },
+      { "key": "ajwaa.onboardingSeen.v1", "format": "bool", "shape": "welcome sheet shown" },
+      { "key": "ajwaa.weather.v1.{cityId}", "format": "JSON string", "shape": "{ fetchedAt, latitude, longitude, forecast, air, storms }" }
+    ],
+    "migration": "Keys are version-suffixed (.v1); unknown enum values and unparseable payloads fall back to defaults instead of crashing."
+  },
+
+  "externalApis": [
+    {
+      "id": "open-meteo-forecast",
+      "url": "https://api.open-meteo.com/v1/forecast",
+      "auth": "none",
+      "required": true,
+      "parameters": ["latitude", "longitude", "current", "hourly", "daily", "timezone=auto"],
+      "provides": ["temperature", "apparent temperature", "humidity", "precipitation", "weather_code", "cloud_cover", "pressure", "wind speed/direction/gusts", "hourly visibility", "daily min/max/uv/precipitation/sunrise/sunset/wind"],
+      "failureMode": "Terminal AppFailure; the screen shows a localized retry view unless a compatible cache exists."
+    },
+    {
+      "id": "open-meteo-air-quality",
+      "url": "https://air-quality-api.open-meteo.com/v1/air-quality",
+      "auth": "none",
+      "required": false,
+      "provides": ["dust", "pm10", "pm2_5", "us_aqi", "european_aqi", "uv_index", "hourly dust/pm10"],
+      "failureMode": "Section-level degradation; dust and air cards hide, the rest of the app keeps working."
+    },
+    {
+      "id": "open-meteo-geocoding",
+      "url": "https://geocoding-api.open-meteo.com/v1/search",
+      "auth": "none",
+      "required": false,
+      "parameters": ["name", "count=10", "language", "format=json"],
+      "provides": ["localized place names", "coordinates", "country", "admin1", "timezone"],
+      "failureMode": "Inline error inside the city sheet; retry by editing the query."
+    },
+    {
+      "id": "bigdatacloud-reverse",
+      "url": "https://api.bigdatacloud.net/data/reverse-geocode-client",
+      "auth": "none",
+      "required": false,
+      "parameters": ["latitude", "longitude", "localityLanguage"],
+      "provides": ["city/locality name", "country", "timezone"],
+      "failureMode": "Falls back to a coordinate-labelled current-location city."
+    },
+    {
+      "id": "nasa-eonet",
+      "url": "https://eonet.gsfc.nasa.gov/api/v3/events?category=severeStorms&status=open&days=60",
+      "auth": "none",
+      "required": false,
+      "provides": ["storm names", "track coordinates", "magnitude in knots"],
+      "failureMode": "Falls back to GDACS."
+    },
+    {
+      "id": "gdacs",
+      "url": "https://www.gdacs.org/gdacsapi/api/events/geteventlist/SEARCH",
+      "auth": "none",
+      "required": false,
+      "provides": ["alert level", "severity", "country", "wind speed", "report link"],
+      "failureMode": "Cyclone section shows an unavailable state; alerts simply omit storms."
+    }
+  ],
+
+  "failureHandling": {
+    "model": "AppFailure(kind, debugMessage) crossing layers; no raw exceptions reach widgets.",
+    "kinds": ["network", "timeout", "server", "rateLimited", "malformed", "permission", "locationUnavailable", "unknown"],
+    "retryPolicy": "3 attempts for network/timeout/5xx/429 with linear backoff; malformed responses are never retried.",
+    "uiMapping": "lib/core/utils/localized_text.dart -> failureMessage(l10n, error), rendered by ErrorView with a retry action.",
+    "storagePolicy": "Writes are best-effort and wrapped; reads validate shape and fall back."
+  },
+
+  "localization": {
+    "locales": ["ar", "en"],
+    "defaultLocale": "ar",
+    "direction": "automatic from locale; widgets use Directionality-aware alignment and directional icons",
+    "numerals": "Western digits in both locales for measurements, times and percentages",
+    "dateNames": "month and weekday names localized via intl after initializeDateFormatting()",
+    "keys": "~200 ARB messages covering every visible string, tooltip and semantic label",
+    "regenerate": "flutter gen-l10n"
+  },
+
+  "theming": {
+    "modes": ["system", "light", "dark"],
+    "palette": { "navy": "#0B1B33", "teal": "#2E8B7A", "gold": "#F2A65A" },
+    "severityColors": { "info": "teal", "warning": "amber", "severe": "red" },
+    "atmosphere": "WeatherScene animates clouds, rain, stars and sun glow based on condition and day/night; reduced-motion friendly.",
+    "motion": ["Reveal (staggered entrance)", "PressableScale (tactile press)", "Shimmer (loading)", "LiveClock (1 s tick)"]
+  },
+
+  "branding": {
+    "concept": "A sun that doubles as a clock, with a cloud and two rain drops: weather plus time.",
+    "source": "lib/presentation/widgets/ajwaa_logo.dart (CustomPainter)",
+    "exports": ["assets/branding/app_icon.png", "assets/branding/app_icon_foreground.png", "assets/branding/app_icon_monochrome.png", "assets/branding/brand_mark.png", "assets/branding/splash_logo.png"],
+    "generator": "tool/render_branding_test.dart (renders the same painter at 1024 px)",
+    "pipelines": ["flutter_launcher_icons (Android adaptive + monochrome, iOS, web, favicon)", "flutter_native_splash (Android 12+ and legacy, iOS)"]
+  },
+
+  "testing": {
+    "commands": ["flutter analyze", "flutter test", "flutter test tool/render_branding_test.dart"],
+    "analyzer": { "issues": 0, "lints": "flutter_lints ^6.0.0" },
+    "tests": { "count": 46, "passing": 46 },
+    "suites": [
+      { "file": "test/parsers_test.dart", "covers": "forecast, air quality, storm (EONET + GDACS) and geocoding parsing, including gaps and wrong types" },
+      { "file": "test/alerts_test.dart", "covers": "every alert rule, severity escalation and ordering" },
+      { "file": "test/units_formatters_test.dart", "covers": "unit conversion, localized formatting and dust/UV/AQI classification" },
+      { "file": "test/weather_repository_test.dart", "covers": "fresh cache, offline fallback, 5 km invalidation, force refresh, malformed payload, cache round trip, key naming" },
+      { "file": "test/stores_test.dart", "covers": "corrupt/partial settings and cities payloads, enum coercion, snapshot round trips" },
+      { "file": "test/widget_test.dart", "covers": "English and Arabic home rendering, RTL directionality, offline error view" },
+      { "file": "test/sheets_test.dart", "covers": "settings changes (theme/units/language), city search + add, welcome flow, data-source and about sheets, corrupt-storage boot" }
+    ],
+    "isolation": {
+      "network": "MockClient; ApiClient(maxAttempts: 1, delay: no-op)",
+      "storage": "SharedPreferences.setMockInitialValues",
+      "time": "injected Clock in WeatherRepository",
+      "widgets": "fixed-frame pumps instead of pumpAndSettle because scenes, shimmer and the clock animate forever"
+    },
+    "manual": "Web build inspected in a real browser at 1296x886 in English/dark and Arabic/light, scrolled through every section."
+  },
+
+  "build": {
+    "commands": {
+      "get": "flutter pub get",
+      "localize": "flutter gen-l10n",
+      "analyze": "flutter analyze",
+      "test": "flutter test",
+      "branding": "flutter test tool/render_branding_test.dart && dart run flutter_launcher_icons && dart run flutter_native_splash:create",
+      "web": "flutter build web --release",
+      "android": "flutter build apk --release",
+      "ios": "flutter build ipa --release"
+    },
+    "ci": ".github/workflows/web.yml builds the web target and publishes to GitHub Pages on pushes to main",
+    "verified": { "web": true, "android": false, "ios": false }
+  },
+
+  "privacy": {
+    "backend": "none",
+    "accounts": "none",
+    "analytics": "none",
+    "ads": "none",
+    "permissions": ["INTERNET", "ACCESS_COARSE_LOCATION (optional)", "ACCESS_FINE_LOCATION (optional)", "NSLocationWhenInUseUsageDescription (optional)"],
+    "dataAtRest": "preferences, saved cities and the last raw payload, on device only",
+    "dataInTransit": "coordinates and city names sent only to the public APIs listed above, over HTTPS"
+  },
+
+  "extensionPoints": [
+    { "task": "Add a language", "steps": ["add lib/l10n/app_xx.arb", "flutter gen-l10n", "add Locale('xx') handling in SettingsController", "extend the language segmented button"] },
+    { "task": "Add a data provider", "steps": ["create a service under lib/data/services", "add a parser if the shape differs", "wire it in providers.dart", "merge it in WeatherRepository._build"] },
+    { "task": "Add an alert", "steps": ["add an AlertKind", "add the rule in lib/domain/alerts.dart", "add ARB copy and a localized_text mapper", "extend test/alerts_test.dart"] },
+    { "task": "Add a section", "steps": ["create the widget in lib/presentation/home/widgets", "insert it in HomeScreen's section list", "reuse SectionHeader, SurfaceCard and Reveal"] }
+  ]
+}

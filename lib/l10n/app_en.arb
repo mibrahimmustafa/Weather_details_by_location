@@ -1,0 +1,366 @@
+{
+  "@@locale": "en",
+  "appName": "Ajwaa",
+  "appTagline": "Weather & time, wherever you are",
+  "appVersionLabel": "Version {version}",
+  "@appVersionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "language": "Language",
+  "arabic": "العربية",
+  "english": "English",
+  "settings": "Settings",
+  "theme": "Appearance",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "units": "Units",
+  "unitsMetric": "°C · km/h",
+  "unitsImperial": "°F · mph",
+  "appearance": "Appearance & language",
+  "aboutApp": "About Ajwaa",
+  "dataSources": "Data sources",
+  "privacy": "Privacy",
+  "privacyBody": "Your location is used only on your device to fetch the weather. It is never sent to us or stored on a server. Saved cities and the last forecast stay on your device.",
+  "version": "Version",
+  "builtWith": "Built with Flutter · Free & open data",
+  "searchCity": "Search for a city",
+  "searchHint": "City name, e.g. Cairo",
+  "searchNoResults": "No cities matched your search.",
+  "searchResults": "Search results",
+  "searchPrompt": "Type at least two letters to search.",
+  "searchError": "Couldn't search right now. Check your connection and try again.",
+  "popularCities": "Popular cities",
+  "savedCities": "Saved cities",
+  "currentLocation": "Current location",
+  "currentLocationBadge": "Live location",
+  "useMyLocation": "Use my current location",
+  "locate": "Locate me",
+  "locating": "Finding your location…",
+  "locationDenied": "Location permission is needed to show your local weather.",
+  "locationDeniedForever": "Location is blocked. Enable it in your device settings, or pick a city manually.",
+  "locationServiceDisabled": "Location services are off. Turn them on, or pick a city manually.",
+  "locationTimeout": "Locating took too long. Try again or pick a city manually.",
+  "locationFailed": "We couldn't determine your location.",
+  "noCities": "No saved cities yet.",
+  "addCity": "Add city",
+  "removeCity": "Remove city",
+  "cityAdded": "{city} was added to your cities.",
+  "@cityAdded": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "cityRemoved": "{city} was removed.",
+  "@cityRemoved": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "refresh": "Refresh",
+  "retry": "Try again",
+  "close": "Close",
+  "done": "Done",
+  "cancel": "Cancel",
+  "openLink": "Open link",
+  "updated": "Updated",
+  "updating": "Updating…",
+  "updatedAt": "Updated {time}",
+  "@updatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "updatedMinutesAgo": "{count} min ago",
+  "@updatedMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "justNow": "Just now",
+  "offlineTitle": "You're offline",
+  "offlineBody": "Showing the last saved forecast for this city.",
+  "cachedData": "Saved data",
+  "liveData": "Live",
+  "feelsLike": "Feels like",
+  "highLow": "H {high} · L {low}",
+  "@highLow": {
+    "placeholders": {
+      "high": {
+        "type": "String"
+      },
+      "low": {
+        "type": "String"
+      }
+    }
+  },
+  "humidity": "Humidity",
+  "rain": "Rain",
+  "rainChance": "Chance of rain",
+  "precipitation": "Precipitation",
+  "dust": "Dust",
+  "wind": "Wind",
+  "windGusts": "Gusts",
+  "uvIndex": "UV index",
+  "pressure": "Pressure",
+  "visibility": "Visibility",
+  "cloudCover": "Cloud cover",
+  "sunrise": "Sunrise",
+  "sunset": "Sunset",
+  "airQuality": "Air quality",
+  "dewPoint": "Dew point",
+  "temperature": "Temperature",
+  "details": "Details",
+  "weatherDetails": "Weather details",
+  "conditionClear": "Clear",
+  "conditionMainlyClear": "Mostly clear",
+  "conditionPartlyCloudy": "Partly cloudy",
+  "conditionCloudy": "Overcast",
+  "conditionFog": "Fog",
+  "conditionDrizzle": "Drizzle",
+  "conditionRain": "Rain",
+  "conditionHeavyRain": "Heavy rain",
+  "conditionFreezingRain": "Freezing rain",
+  "conditionSnow": "Snow",
+  "conditionThunderstorm": "Thunderstorm",
+  "conditionDust": "Dust in the air",
+  "conditionUnknown": "Mixed conditions",
+  "now": "Now",
+  "localTime": "Local time",
+  "timezone": "Time zone",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "hourlyTitle": "Next 24 hours",
+  "hourlySubtitle": "Temperature, rain chance and wind",
+  "dailyTitle": "7-day forecast",
+  "dailySubtitle": "Highs, lows and rain chance",
+  "chanceOfRain": "Chance of rain",
+  "rainToday": "Rain today",
+  "rainNext24h": "Rain expected in 24 h",
+  "nextRain": "Next rain",
+  "noRainNext24h": "No rain expected in the next 24 hours.",
+  "rainInHours": "in about {hours} h",
+  "@rainInHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "rainNow": "Rain is falling now",
+  "rainStopped": "No rain right now",
+  "rainChartTitle": "Rain over the next 12 hours",
+  "precipAmount": "Amount",
+  "humidityHint": "Share of water vapour in the air at 2 m.",
+  "windHint": "Sustained wind at 10 m, with gusts.",
+  "dustHint": "Airborne dust concentration near the surface.",
+  "uvHint": "0–2 low · 3–5 moderate · 6–7 high · 8–10 very high · 11+ extreme.",
+  "pressureHint": "Sea-level pressure. Falling pressure can mean unsettled weather.",
+  "visibilityHint": "Horizontal visibility near the ground.",
+  "cloudsHint": "Fraction of the sky covered by clouds.",
+  "rainHint": "Total liquid precipitation expected in the next 24 hours.",
+  "rainAndDustTitle": "Rain & dust",
+  "rainAndDustSubtitle": "What the air is doing hour by hour",
+  "dustTitle": "Dust & air",
+  "dustLevel": "Dust level",
+  "dustLow": "Low",
+  "dustModerate": "Moderate",
+  "dustHigh": "High",
+  "dustVeryHigh": "Very high",
+  "dustAdviceLow": "Air is clear. A good time to be outside.",
+  "dustAdviceModerate": "Sensitive people may notice the air. Consider a mask outdoors.",
+  "dustAdviceHigh": "Limit outdoor activity, keep windows closed and wear a mask.",
+  "dustAdviceVeryHigh": "Avoid going outside. Seal windows and use an air purifier if you have one.",
+  "dustTrendTitle": "Dust over the next 12 hours",
+  "dustConcentration": "Dust concentration",
+  "pm10": "PM10",
+  "pm25": "PM2.5",
+  "alertsTitle": "Alerts",
+  "noAlertsTitle": "All clear",
+  "noAlertsBody": "No significant weather hazards are expected right now.",
+  "alertsCount": "{count, plural, =0{No alerts} =1{1 alert} other{{count} alerts}}",
+  "@alertsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "alertHeatTitle": "Extreme heat",
+  "alertColdTitle": "Severe cold",
+  "alertWindTitle": "Strong winds",
+  "alertRainTitle": "Heavy rain",
+  "alertDustTitle": "Dust storm",
+  "alertUvTitle": "Very high UV",
+  "alertThunderTitle": "Thunderstorms",
+  "alertStormTitle": "Cyclone nearby",
+  "alertHeatBody": "Feels like {value}. Stay in the shade, drink water and avoid midday sun.",
+  "alertColdBody": "Feels like {value}. Cover up and limit time outdoors.",
+  "alertWindBody": "Gusts up to {value}. Secure loose objects and take care outdoors.",
+  "alertRainBody": "{value} of rain is expected soon. Avoid low-lying roads and dry riverbeds.",
+  "alertDustBody": "Dust reaches {value}. Close windows and use a mask if you go out.",
+  "alertUvBody": "UV index reaches {value}. Use sunscreen, sunglasses and a hat.",
+  "alertThunderBody": "Thunderstorms are nearby. Stay indoors and avoid open ground.",
+  "alertStormBody": "{name} is about {distance} away. Follow official guidance.",
+  "severityInfo": "Info",
+  "severityWarning": "Warning",
+  "severitySevere": "Severe",
+  "stormsTitle": "Active cyclones",
+  "stormsSubtitle": "Nearest tropical systems, tracked by GDACS",
+  "stormsEmpty": "No active tropical cyclones are being tracked right now.",
+  "stormsUnavailable": "Cyclone data is unavailable right now.",
+  "stormDistance": "{distance} away",
+  "@stormDistance": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "stormWind": "Winds {speed}",
+  "@stormWind": {
+    "placeholders": {
+      "speed": {
+        "type": "String"
+      }
+    }
+  },
+  "stormSeverity": "Severity",
+  "distance": "Distance",
+  "country": "Country",
+  "activePeriod": "Active period",
+  "viewOnGdacs": "View on GDACS",
+  "stormDisclaimer": "Cyclone positions are approximate. Always follow your national meteorological service.",
+  "aboutTitle": "About Ajwaa",
+  "aboutBody": "Ajwaa brings the weather, the rain, the dust and the local time of any city into one calm, glanceable screen — with live location, saved cities, Arabic and English.",
+  "brandTitle": "Designed for clarity",
+  "brandBody": "Warm light, quiet motion and honest data. No accounts, no ads, no tracking.",
+  "madeBy": "Made by Mohamed Ibrahim",
+  "licenses": "Open-source licenses",
+  "dataProviderOpenMeteo": "Open-Meteo — weather, air quality & geocoding",
+  "dataProviderGdacs": "GDACS — global disaster alerts",
+  "dataProviderBigDataCloud": "BigDataCloud — reverse geocoding",
+  "openSourceNote": "Free, open data. No API keys required.",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorNetwork": "No internet connection. Check your network and try again.",
+  "errorTimeout": "The weather service took too long to respond.",
+  "errorServer": "The weather service is busy right now. Please try again shortly.",
+  "errorRateLimited": "Too many requests. Please wait a moment and try again.",
+  "errorMalformed": "We received unexpected weather data.",
+  "errorNoCity": "Choose a city to see its weather.",
+  "errorLocation": "We couldn't get your location. Pick a city instead.",
+  "errorUnknown": "An unexpected error occurred.",
+  "tempUnit": "Temperature",
+  "windUnit": "Wind",
+  "distanceUnit": "Distance",
+  "a11yLanguageToggle": "Switch language",
+  "a11yRefresh": "Refresh weather",
+  "a11ySettings": "Open settings",
+  "a11ySearch": "Search cities",
+  "a11yCityPicker": "Change city",
+  "selected": "Selected",
+  "swipeToRemove": "Swipe a city to remove it",
+  "footerNote": "Forecasts by Open-Meteo · Storm alerts by GDACS",
+  "pullToRefresh": "Pull down to refresh",
+  "loading": "Loading…",
+  "showMore": "Show more",
+  "showLess": "Show less",
+  "next7Days": "Next 7 days",
+  "high": "High",
+  "low": "Low",
+  "gusts": "gusts",
+  "direction": "Direction",
+  "kmh": "km/h",
+  "mph": "mph",
+  "celsius": "°C",
+  "fahrenheit": "°F",
+  "percent": "%",
+  "weatherSummary": "{city}: {condition}, {temp}",
+  "@weatherSummary": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "condition": {
+        "type": "String"
+      },
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "cityPickerTitle": "Choose a city",
+  "cityPickerSubtitle": "Weather and time update instantly",
+  "settingsSaved": "Preferences saved automatically",
+  "chartSelected": "Selected hour",
+  "chartNow": "Now",
+  "rainTotalLabel": "Total",
+  "dustPeakLabel": "Peak",
+  "stormCategory": "Category",
+  "retryHint": "Check your connection, then try again.",
+  "welcomeTitle": "Where are you?",
+  "welcomeBody": "Allow location access for instant local weather, or pick a city to begin.",
+  "allowLocation": "Allow location",
+  "pickCity": "Pick a city",
+  "continueWithout": "Not now",
+  "openSettings": "Open settings",
+  "unitSystem": "Measurement system",
+  "themeDescription": "Choose how Ajwaa looks.",
+  "languageDescription": "The whole app switches instantly, including direction.",
+  "dataNote": "Weather models update hourly. The app refreshes automatically every 10 minutes while open.",
+  "lastSync": "Last sync",
+  "never": "Never",
+  "airQualityIndex": "Air quality index",
+  "good": "Good",
+  "moderate": "Moderate",
+  "unhealthySensitive": "Unhealthy for sensitive groups",
+  "unhealthy": "Unhealthy",
+  "veryUnhealthy": "Very unhealthy",
+  "hazardous": "Hazardous",
+  "uvLow": "Low",
+  "uvModerate": "Moderate",
+  "uvHigh": "High",
+  "uvVeryHigh": "Very high",
+  "uvExtreme": "Extreme",
+  "dirN": "N",
+  "dirNE": "NE",
+  "dirE": "E",
+  "dirSE": "SE",
+  "dirS": "S",
+  "dirSW": "SW",
+  "dirW": "W",
+  "dirNW": "NW",
+  "airNow": "Air right now",
+  "feelsLikeShort": "Feels",
+  "emptyStateTitle": "No weather yet",
+  "emptyStateBody": "Search for a city or allow location access to see the weather.",
+  "showAllCities": "All cities",
+  "manageCities": "Manage cities",
+  "refreshSuccess": "Weather is up to date",
+  "tapChartHint": "Tap an hour to inspect it",
+  "detailsFor": "Details for {city}",
+  "a11yWeatherScene": "Weather illustration",
+  "closeSheet": "Close panel",
+  "dataUpdatedShort": "Updated {time}",
+  "precipChanceShort": "{value}%",
+  "setAsDefault": "Set as default",
+  "cityExists": "City already saved",
+  "mmUnit": "mm",
+  "inUnit": "in",
+  "kmUnit": "km",
+  "miUnit": "mi",
+  "hpaUnit": "hPa",
+  "microgramUnit": "µg/m³"
+}

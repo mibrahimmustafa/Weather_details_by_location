@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="description" content="أجواء | Ajwaa — الطقس والوقت، أينما كنت. Live weather, rain, dust, cyclone tracking and local time for any city.">
+  <meta name="keywords" content="weather, ajwaa, أجواء, الطقس, rain, dust, cyclone, وقت, Open-Meteo">
+  <meta name="author" content="Mohamed Ibrahim Mustafa">
+  <meta name="theme-color" content="#0B1B33">
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="أجواء · Ajwaa">
+  <meta property="og:description" content="الطقس والوقت، أينما كنت — live weather, rain, dust and local time for any city.">
+  <meta property="og:image" content="icons/Icon-512.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ajwaa">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>أجواء · Ajwaa — الطقس والوقت أينما كنت</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #0B1B33;
+      color: #E8EEF7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
+      overflow: hidden;
+    }
+
+    /* Branded first-paint loader, removed once Flutter mounts. */
+    #ajwaa-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      background: radial-gradient(circle at 72% 24%, #16345C 0%, #0B1B33 58%, #072C33 100%);
+      transition: opacity 420ms ease;
+      z-index: 9999;
+    }
+
+    #ajwaa-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #ajwaa-loader .mark {
+      width: 132px;
+      height: 132px;
+      filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.45));
+      animation: ajwaa-float 2.8s ease-in-out infinite;
+    }
+
+    #ajwaa-loader .name {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: linear-gradient(96deg, #FFE7A8, #FFC04D 45%, #4FD1C5);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #ajwaa-loader .tagline {
+      font-size: 13px;
+      opacity: 0.66;
+      margin-top: -10px;
+    }
+
+    @keyframes ajwaa-float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-9px) scale(1.03); }
+    }
+  </style>
+</head>
+<body>
+  <div id="ajwaa-loader" role="status" aria-live="polite">
+    <img class="mark" src="branding-mark.png" alt="أجواء · Ajwaa" width="132" height="132">
+    <div class="name">أجواء · Ajwaa</div>
+    <div class="tagline">الطقس والوقت، أينما كنت</div>
+  </div>
+
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+
+  <script>
+    // Use the browser locale for direction/spelling before Flutter boots.
+    (function () {
+      var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      if (lang.indexOf('ar') === 0) {
+        document.documentElement.lang = 'ar';
+        document.documentElement.dir = 'rtl';
+      }
+    })();
+
+    // Fade the branded loader out as soon as Flutter paints its first frame.
+    window.addEventListener('flutter-first-frame', function () {
+      var loader = document.getElementById('ajwaa-loader');
+      if (!loader) return;
+      loader.classList.add('hidden');
+      window.setTimeout(function () {
+        if (loader.parentNode) loader.parentNode.removeChild(loader);
+      }, 460);
+    });
+  </script>
+</body>
+</html>
