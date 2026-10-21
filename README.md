@@ -107,6 +107,10 @@ modules, responsibilities, key classes, data flow, storage schema, API contracts
 failure handling and the testing strategy. It is the reference document for
 anyone extending the app.
 
+Want the same product as a plain **HTML / CSS / JS** site? [`docs/PROMPT-WEB.md`](docs/PROMPT-WEB.md)
+holds a specification-grade prompt that reproduces every screen, component and
+rule of this app on vanilla web technologies.
+
 ### 🔌 Data sources
 
 | Purpose | Provider | Key | Why |
@@ -274,6 +278,10 @@ SIL Open Font License (see `assets/fonts/OFL-IBMPlexSansArabic.txt`).
 ملف `Architectures.json` يوثّق البنية آليًا: الطبقات، والوحدات، والمسؤوليات،
 والأصناف الأساسية، ومسار البيانات، ومخطط التخزين، وعقود الـAPI، ومعالجة
 الأخطاء، واستراتيجية الاختبار.
+
+وإذا أردت نفس التطبيق بتقنيات الويب النقي (**HTML / CSS / JS**)، فملف
+[`docs/PROMPT-WEB.md`](docs/PROMPT-WEB.md) يحتوي برومبت مواصفات كامل يعيد
+إنتاج كل الشاشات والمكوّنات والقواعد بلا أي إطار عمل.
 
 ### 🚀 التشغيل
 
