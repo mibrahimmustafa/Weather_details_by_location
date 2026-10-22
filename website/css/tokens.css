@@ -1,0 +1,294 @@
+/* ==========================================================================
+   Ajwaa — design tokens
+   ========================================================================== */
+
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-300-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-latin-300-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-latin-500-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-latin-600-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: "IBM Plex Sans Arabic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/ibm-plex-sans-arabic-latin-700-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Brand palette */
+  --navy-900: #0b1b33;
+  --navy-800: #16345c;
+  --teal-700: #072c33;
+  --teal-500: #2e8b7a;
+  --gold-500: #f2a65a;
+  --sky-400: #5ab8e8;
+  --coral-500: #f08a5d;
+  --rain-500: #49b7d8;
+
+  /* Surfaces */
+  --bg: #071324;
+  --bg-2: #0b2038;
+  --bg-3: #072c33;
+  --surface: rgba(17, 41, 70, 0.55);
+  --surface-strong: rgba(13, 32, 56, 0.92);
+  --surface-soft: rgba(255, 255, 255, 0.045);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --sheet-bg: #0b1e35;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  /* Text */
+  --text: #ecf4fc;
+  --muted: #9db2c7;
+  --faint: #7c93a9;
+  --on-primary: #04231e;
+
+  /* Accents */
+  --primary: #45bfa7;
+  --primary-strong: #2e8b7a;
+  --primary-soft: rgba(69, 191, 167, 0.14);
+  --primary-line: rgba(69, 191, 167, 0.32);
+  --accent: #f2a65a;
+  --accent-soft: rgba(242, 166, 90, 0.14);
+  --accent-line: rgba(242, 166, 90, 0.32);
+  --danger: #f2716b;
+  --danger-soft: rgba(242, 113, 107, 0.13);
+  --danger-line: rgba(242, 113, 107, 0.32);
+  --warning: #e0a33e;
+  --warning-soft: rgba(224, 163, 62, 0.14);
+  --warning-line: rgba(224, 163, 62, 0.34);
+  --info: #49b7d8;
+  --info-soft: rgba(73, 183, 216, 0.14);
+  --info-line: rgba(73, 183, 216, 0.32);
+
+  /* Weather */
+  --sun: #f2a65a;
+  --sun-core: #ffd38c;
+  --cloud: #eaf4fb;
+  --cloud-shadow: #b9d5e6;
+  --drop: #5ab8e8;
+  --bolt: #ffd166;
+  --star: #d9ecff;
+  --chip-line: #86a4bd;
+
+  /* Charts */
+  --chart-line: #5ab8e8;
+  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-dot: #eaf6ff;
+
+  /* Hero is always a deep sky, in both themes */
+  --hero-text: #f6fbff;
+  --hero-muted: rgba(236, 245, 255, 0.72);
+  --hero-border: rgba(255, 255, 255, 0.16);
+  --hero-glass: rgba(9, 24, 44, 0.38);
+
+  /* Geometry */
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 18px;
+  --radius-lg: 22px;
+  --radius-xl: 26px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 12px 30px -12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 30px 70px -34px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 0 1px rgba(69, 191, 167, 0.15), 0 20px 60px -20px rgba(46, 139, 122, 0.45);
+
+  /* Type */
+  --font-sans: "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Sans Arabic", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --header-h: 68px;
+  --container: 900px;
+
+  --ease-out: cubic-bezier(0.22, 0.72, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #eef5fb;
+  --bg-2: #e3eef8;
+  --bg-3: #dcebf0;
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-strong: #ffffff;
+  --surface-soft: rgba(11, 27, 51, 0.04);
+  --surface-hover: rgba(11, 27, 51, 0.07);
+  --sheet-bg: #ffffff;
+  --border: rgba(11, 27, 51, 0.1);
+  --border-strong: rgba(11, 27, 51, 0.18);
+
+  --text: #0b1b33;
+  --muted: #46607a;
+  --faint: #6a8198;
+  --on-primary: #ffffff;
+
+  --primary: #1f7f6e;
+  --primary-strong: #16695b;
+  --primary-soft: rgba(31, 127, 110, 0.1);
+  --primary-line: rgba(31, 127, 110, 0.26);
+  --accent: #bd7128;
+  --accent-soft: rgba(189, 113, 40, 0.11);
+  --accent-line: rgba(189, 113, 40, 0.26);
+  --danger: #c0413c;
+  --danger-soft: rgba(192, 65, 60, 0.09);
+  --danger-line: rgba(192, 65, 60, 0.24);
+  --warning: #9a6208;
+  --warning-soft: rgba(224, 163, 62, 0.16);
+  --warning-line: rgba(154, 98, 8, 0.26);
+  --info: #147b9f;
+  --info-soft: rgba(20, 123, 159, 0.1);
+  --info-line: rgba(20, 123, 159, 0.24);
+
+  --sun: #e8903d;
+  --sun-core: #ffc46b;
+  --cloud: #ffffff;
+  --cloud-shadow: #cfe1ee;
+  --drop: #2f8fb8;
+  --bolt: #c98a17;
+  --star: #6c9cc4;
+  --chip-line: #8fa9c0;
+
+  --chart-line: #1f7f6e;
+  --chart-grid: rgba(11, 27, 51, 0.08);
+  --chart-dot: #0b1b33;
+
+  --shadow-sm: 0 1px 2px rgba(11, 27, 51, 0.08);
+  --shadow-md: 0 14px 34px -18px rgba(11, 27, 51, 0.28);
+  --shadow-lg: 0 30px 70px -40px rgba(11, 27, 51, 0.35);
+  --shadow-glow: 0 0 0 1px rgba(31, 127, 110, 0.12), 0 20px 50px -26px rgba(31, 127, 110, 0.35);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #eef5fb;
+    --bg-2: #e3eef8;
+    --bg-3: #dcebf0;
+    --surface: rgba(255, 255, 255, 0.72);
+    --surface-strong: #ffffff;
+    --surface-soft: rgba(11, 27, 51, 0.04);
+    --surface-hover: rgba(11, 27, 51, 0.07);
+    --sheet-bg: #ffffff;
+    --border: rgba(11, 27, 51, 0.1);
+    --border-strong: rgba(11, 27, 51, 0.18);
+    --text: #0b1b33;
+    --muted: #46607a;
+    --faint: #6a8198;
+    --on-primary: #ffffff;
+    --primary: #1f7f6e;
+    --primary-strong: #16695b;
+    --primary-soft: rgba(31, 127, 110, 0.1);
+    --primary-line: rgba(31, 127, 110, 0.26);
+    --accent: #bd7128;
+    --accent-soft: rgba(189, 113, 40, 0.11);
+    --accent-line: rgba(189, 113, 40, 0.26);
+    --danger: #c0413c;
+    --danger-soft: rgba(192, 65, 60, 0.09);
+    --danger-line: rgba(192, 65, 60, 0.24);
+    --warning: #9a6208;
+    --warning-soft: rgba(224, 163, 62, 0.16);
+    --warning-line: rgba(154, 98, 8, 0.26);
+    --info: #147b9f;
+    --info-soft: rgba(20, 123, 159, 0.1);
+    --info-line: rgba(20, 123, 159, 0.24);
+    --sun: #e8903d;
+    --sun-core: #ffc46b;
+    --cloud: #ffffff;
+    --cloud-shadow: #cfe1ee;
+    --drop: #2f8fb8;
+    --bolt: #c98a17;
+    --star: #6c9cc4;
+    --chart-line: #1f7f6e;
+    --chart-grid: rgba(11, 27, 51, 0.08);
+    --chart-dot: #0b1b33;
+    --shadow-sm: 0 1px 2px rgba(11, 27, 51, 0.08);
+    --shadow-md: 0 14px 34px -18px rgba(11, 27, 51, 0.28);
+    --shadow-lg: 0 30px 70px -40px rgba(11, 27, 51, 0.35);
+  }
+}

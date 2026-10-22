@@ -1,0 +1,118 @@
+/* ==========================================================================
+   Ajwaa — motion
+   Small, purposeful animations. Every one of them is optional: the
+   reduced-motion query at the bottom turns the interface completely still.
+   ========================================================================== */
+
+.reveal {
+  animation: reveal 560ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 224, 194, 0.65);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(79, 224, 194, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 224, 194, 0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bootSlide {
+  0% {
+    inset-inline-start: -50%;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    inset-inline-start: 105%;
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+/* The "now" marker in the sun card. */
+.sun-card__now-dot {
+  animation: livePulse 2.6s ease-out infinite;
+}
+
+/* Loading refresh icon: keep it spinning even when JS re-renders mid-flight. */
+.refresh-btn.is-loading {
+  cursor: progress;
+}
+
+/* New sections arriving after a city switch. */
+.section,
+.hero.card {
+  animation-fill-mode: both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .scene__cloud,
+  .scene__drop,
+  .scene__flake,
+  .scene__star,
+  .scene__fog,
+  .scene__flash,
+  .scene__orb {
+    animation: none !important;
+  }
+}

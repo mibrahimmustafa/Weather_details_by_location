@@ -1,0 +1,444 @@
+/* ==========================================================================
+   Ajwaa — atmosphere
+   The animated sky inside the hero. The hero stays deep and cinematic in
+   both themes; the rest of the interface follows the theme.
+   ========================================================================== */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(168deg, #174a70 0%, #0d2c4a 44%, #08192c 100%);
+  contain: paint;
+}
+
+.scene__glow {
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 80%;
+  background:
+    radial-gradient(46% 58% at 78% 18%, rgba(255, 206, 138, 0.32), transparent 68%),
+    radial-gradient(60% 70% at 18% 0%, rgba(73, 183, 216, 0.16), transparent 72%);
+  filter: blur(6px);
+}
+
+.scene__orb {
+  position: absolute;
+  inset-block-start: 7%;
+  inset-inline-end: 7%;
+  width: clamp(74px, 21vw, 118px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, #fff7e2 0%, #ffe0a2 30%, #f7b96c 58%, #ef9553 100%);
+  box-shadow:
+    0 0 34px 10px rgba(255, 197, 120, 0.35),
+    0 0 120px 54px rgba(242, 166, 90, 0.2);
+  animation: orbBreathe 9s ease-in-out infinite;
+}
+
+/* ------------------------------- families -------------------------------- */
+
+.scene--clear {
+  background:
+    radial-gradient(90% 80% at 82% 8%, rgba(255, 201, 128, 0.28), transparent 58%),
+    linear-gradient(166deg, #1d5b82 0%, #114063 38%, #0a2138 72%, #071827 100%);
+}
+
+.scene--night {
+  background:
+    radial-gradient(80% 70% at 80% 4%, rgba(122, 168, 226, 0.2), transparent 58%),
+    linear-gradient(168deg, #0b1c38 0%, #08172e 48%, #050d1c 100%);
+}
+
+.scene--night .scene__orb {
+  width: clamp(58px, 16vw, 88px);
+  background:
+    radial-gradient(circle at 36% 32%, #fbfdff 0%, #e4eefb 42%, #b9cfe8 72%, #93b1d2 100%);
+  box-shadow:
+    0 0 26px 6px rgba(214, 233, 255, 0.28),
+    0 0 100px 40px rgba(120, 165, 220, 0.16);
+}
+
+/* The hero glyph already shows the sun/moon. A second disc behind it reads as a
+   duplicate, so the clear and night skies keep only the atmospheric glow. */
+.scene--clear .scene__orb,
+.scene--night .scene__orb {
+  opacity: 0;
+}
+
+.scene--night .scene__orb::after {
+  content: "";
+  position: absolute;
+  inset: 18% 20% auto auto;
+  width: 22%;
+  aspect-ratio: 1.4;
+  border-radius: 50%;
+  background: rgba(140, 168, 200, 0.28);
+  box-shadow: -18px 22px 0 -3px rgba(140, 168, 200, 0.2);
+}
+
+.scene--cloudy {
+  background:
+    radial-gradient(84% 76% at 78% 4%, rgba(190, 216, 235, 0.2), transparent 62%),
+    linear-gradient(166deg, #2c5573 0%, #173b58 44%, #0b2136 100%);
+}
+
+.scene--cloudy .scene__orb,
+.scene--rain .scene__orb,
+.scene--storm .scene__orb,
+.scene--snow .scene__orb,
+.scene--fog .scene__orb {
+  opacity: 0.32;
+  filter: saturate(0.55) blur(1px);
+}
+
+.scene--rain {
+  background:
+    radial-gradient(90% 80% at 70% 0%, rgba(130, 185, 214, 0.2), transparent 62%),
+    linear-gradient(168deg, #2a526c 0%, #143449 46%, #081c2b 100%);
+}
+
+.scene--storm {
+  background:
+    radial-gradient(80% 70% at 72% 0%, rgba(160, 152, 220, 0.2), transparent 60%),
+    linear-gradient(170deg, #243a5c 0%, #131f38 44%, #070f1e 100%);
+}
+
+.scene--storm .scene__orb {
+  opacity: 0.16;
+}
+
+.scene--snow {
+  background:
+    radial-gradient(86% 76% at 76% 2%, rgba(220, 240, 255, 0.24), transparent 62%),
+    linear-gradient(168deg, #3a6079 0%, #23465e 46%, #102b3e 100%);
+}
+
+.scene--snow .scene__orb {
+  opacity: 0.24;
+}
+
+.scene--fog {
+  background:
+    radial-gradient(90% 76% at 72% 0%, rgba(205, 226, 236, 0.18), transparent 64%),
+    linear-gradient(168deg, #38596a 0%, #244253 46%, #102433 100%);
+}
+
+.scene--fog .scene__orb {
+  opacity: 0.14;
+}
+
+/* --------------------------------- stars --------------------------------- */
+
+.scene__stars {
+  position: absolute;
+  inset: 0;
+}
+
+.scene__star {
+  position: absolute;
+  inset-block-start: var(--y, 20%);
+  inset-inline-start: var(--x, 20%);
+  width: var(--size, 1.5px);
+  height: var(--size, 1.5px);
+  border-radius: 50%;
+  background: #eaf5ff;
+  box-shadow: 0 0 6px rgba(214, 236, 255, 0.85);
+  opacity: 0.5;
+  animation: starTwinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
+}
+
+/* --------------------------------- clouds -------------------------------- */
+
+.scene__clouds {
+  position: absolute;
+  inset: 0;
+}
+
+.scene__cloud {
+  position: absolute;
+  inset-block-start: var(--y, 20%);
+  inset-inline-start: var(--x, 10%);
+  width: 190px;
+  height: 62px;
+  opacity: var(--o, 0.7);
+  filter: blur(0.4px);
+  transform: scale(var(--s, 1));
+  animation: cloudDrift var(--dur, 70s) linear var(--delay, 0s) infinite;
+  will-change: transform;
+}
+
+.scene__cloud::before {
+  content: "";
+  position: absolute;
+  inset-inline: 8px 0;
+  inset-block-end: 0;
+  height: 34px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f7fcff 0%, #e2f0f8 52%, #bdd7e7 100%);
+  box-shadow: 0 16px 28px -16px rgba(2, 12, 24, 0.55);
+}
+
+.scene--cloudy .scene__cloud::before,
+.scene--rain .scene__cloud::before,
+.scene--snow .scene__cloud::before {
+  background: linear-gradient(180deg, #f4faff 0%, #dbeaf5 52%, #b4cddd 100%);
+}
+
+.scene--storm .scene__cloud::before {
+  background: linear-gradient(180deg, #c0cee0 0%, #93aac2 54%, #6a829b 100%);
+}
+
+.scene--night .scene__cloud::before {
+  background: linear-gradient(180deg, #b6c9df 0%, #859db9 54%, #5e7692 100%);
+  box-shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.65);
+}
+
+.puff {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff 0%, #e6f3fa 48%, #c3dcea 100%);
+  box-shadow:
+    0 16px 28px -16px rgba(2, 12, 24, 0.55),
+    inset 0 -6px 14px rgba(148, 184, 207, 0.35);
+}
+
+.puff--a {
+  inset-block-end: 6px;
+  inset-inline-start: 8px;
+  width: 62px;
+  height: 46px;
+}
+
+.puff--b {
+  inset-block-end: 12px;
+  inset-inline-start: 52px;
+  width: 86px;
+  height: 62px;
+}
+
+.puff--c {
+  inset-block-end: 2px;
+  inset-inline-start: 128px;
+  width: 52px;
+  height: 40px;
+}
+
+.scene--cloudy .puff,
+.scene--rain .puff,
+.scene--snow .puff {
+  background: linear-gradient(180deg, #f6fbff 0%, #dcebf5 52%, #b6cfdf 100%);
+}
+
+.scene--storm .puff {
+  background: linear-gradient(180deg, #c3d2e4 0%, #93aac2 54%, #6a829b 100%);
+}
+
+.scene--night .puff {
+  background: linear-gradient(180deg, #c6d8ec 0%, #94abc6 52%, #6d85a1 100%);
+  box-shadow:
+    0 16px 30px -14px rgba(0, 0, 0, 0.65),
+    inset 0 -6px 14px rgba(34, 52, 74, 0.45);
+}
+
+.scene--fog .puff {
+  opacity: 0.55;
+  filter: blur(2px);
+}
+
+/* ---------------------------------- rain --------------------------------- */
+
+.scene__rain,
+.scene__snow {
+  position: absolute;
+  inset: 0;
+}
+
+.scene__drop {
+  position: absolute;
+  inset-block-start: -12%;
+  inset-inline-start: var(--x, 50%);
+  width: 1.5px;
+  height: var(--h, 16px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(190, 231, 252, 0) 0%, rgba(190, 231, 252, 0.9) 100%);
+  opacity: var(--o, 0.5);
+  transform: rotate(7deg);
+  animation: rainfall var(--dur, 1s) linear var(--delay, 0s) infinite;
+  will-change: transform;
+}
+
+.scene--storm .scene__drop {
+  background: linear-gradient(180deg, rgba(210, 226, 255, 0) 0%, rgba(210, 226, 255, 0.95) 100%);
+  opacity: calc(var(--o, 0.5) + 0.1);
+}
+
+.scene__flake {
+  position: absolute;
+  inset-block-start: -6%;
+  inset-inline-start: var(--x, 50%);
+  width: var(--size, 3px);
+  height: var(--size, 3px);
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
+  opacity: 0.8;
+  animation: snowfall var(--dur, 7s) linear var(--delay, 0s) infinite;
+  will-change: transform;
+}
+
+/* ----------------------------------- fog --------------------------------- */
+
+.scene__fog {
+  position: absolute;
+  inset-inline: -20%;
+  height: 46%;
+  border-radius: 50%;
+  background:
+    radial-gradient(60% 60% at 30% 50%, rgba(226, 240, 247, 0.4), transparent 70%),
+    radial-gradient(64% 64% at 70% 50%, rgba(214, 232, 242, 0.32), transparent 72%);
+  filter: blur(18px);
+  opacity: 0.7;
+  animation: fogDrift 26s ease-in-out infinite alternate;
+}
+
+.scene__fog--a {
+  inset-block-end: 2%;
+}
+
+.scene__fog--b {
+  inset-block-end: 18%;
+  height: 38%;
+  opacity: 0.45;
+  animation-duration: 36s;
+  animation-direction: alternate-reverse;
+}
+
+/* ---------------------------------- flash -------------------------------- */
+
+.scene__flash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 70% at 30% 10%, rgba(214, 232, 255, 0.9), transparent 62%),
+    rgba(180, 208, 255, 0.5);
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: stormFlash 8.5s linear infinite;
+}
+
+/* -------------------------------- keyframes ------------------------------ */
+
+@keyframes cloudDrift {
+  0% {
+    transform: translate3d(-6%, 0, 0) scale(var(--s, 1));
+  }
+  50% {
+    transform: translate3d(22vw, 1.4%, 0) scale(var(--s, 1));
+  }
+  100% {
+    transform: translate3d(108vw, 0, 0) scale(var(--s, 1));
+  }
+}
+
+@keyframes rainfall {
+  0% {
+    transform: translate3d(0, -4vh, 0) rotate(7deg);
+  }
+  100% {
+    transform: translate3d(-2.4vw, 112vh, 0) rotate(7deg);
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translate3d(0, -4vh, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(var(--drift, 20px), 108vh, 0);
+    opacity: 0.35;
+  }
+}
+
+@keyframes starTwinkle {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes orbBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.035);
+    filter: brightness(1.06);
+  }
+}
+
+@keyframes fogDrift {
+  0% {
+    transform: translate3d(-4%, 0, 0) scale(1.02);
+  }
+  100% {
+    transform: translate3d(6%, -2%, 0) scale(1.08);
+  }
+}
+
+@keyframes stormFlash {
+  0%,
+  84%,
+  87%,
+  100% {
+    opacity: 0;
+  }
+  85% {
+    opacity: 0.5;
+  }
+  86% {
+    opacity: 0.12;
+  }
+  88% {
+    opacity: 0.3;
+  }
+}
+
+/* Keep the scene cheap on very small screens. */
+@media (max-width: 420px) {
+  .scene__cloud {
+    width: 154px;
+    height: 52px;
+  }
+
+  .puff--a {
+    width: 50px;
+    height: 38px;
+  }
+
+  .puff--b {
+    width: 70px;
+    height: 50px;
+    inset-inline-start: 42px;
+  }
+
+  .puff--c {
+    inset-inline-start: 104px;
+    width: 42px;
+    height: 32px;
+  }
+}

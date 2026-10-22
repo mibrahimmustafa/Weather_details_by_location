@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>أجواء — الطقس والوقت، أينما كنت</title>
+  <meta name="description" content="أجواء — حالة الجو والوقت المحلي في مدينتك، مع تفاصيل المطر والغبار والرطوبة والأعاصير. يعمل بلا مفاتيح API.">
+  <meta name="author" content="Mohamed Ibrahim Mustafa">
+  <meta name="theme-color" content="#0B1B33">
+  <meta name="color-scheme" content="dark light">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mibrahimmustafa.github.io/Weather_details_by_location/website/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ajwaa · أجواء">
+  <meta property="og:title" content="أجواء — الطقس والوقت، أينما كنت">
+  <meta property="og:description" content="حالة الجو والوقت المحلي في مدينتك، مع تفاصيل المطر والغبار والرطوبة والأعاصير.">
+  <meta property="og:url" content="https://mibrahimmustafa.github.io/Weather_details_by_location/website/">
+  <meta property="og:image" content="https://mibrahimmustafa.github.io/Weather_details_by_location/website/assets/icons/favicon.svg">
+  <meta property="og:locale" content="ar_EG">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Ajwaa · أجواء">
+  <meta name="twitter:description" content="Weather &amp; time, wherever you are.">
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icons/favicon.svg">
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/atmosphere.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/sheets.css">
+  <link rel="stylesheet" href="css/motion.css">
+
+  <noscript>
+    <style>.boot { display: none !important; }</style>
+  </noscript>
+
+  <script>
+    // Paint the stored language and theme before the first frame.
+    (function () {
+      try {
+        var saved = JSON.parse(localStorage.getItem('ajwaa.settings.v1') || 'null') || {};
+        var mode = saved.themeMode || 'system';
+        var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        var locale = saved.localeCode === 'ar' || saved.localeCode === 'en'
+          ? saved.localeCode
+          : (/^ar\b/i.test(navigator.language || '') ? 'ar' : 'en');
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.lang = locale;
+        document.documentElement.dir = locale === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.dataset.locale = locale;
+      } catch (error) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    }());
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">انتقل إلى المحتوى</a>
+
+  <div class="boot" id="boot-loader" role="status" aria-live="polite">
+    <div class="boot__inner">
+      <div class="boot__logo" id="boot-logo" aria-hidden="true"></div>
+      <h1 class="boot__title">
+        <span data-i18n="app.name">أجواء</span>
+        <span class="boot__latin" lang="en" dir="ltr">Ajwaa</span>
+      </h1>
+      <p class="boot__tagline" data-i18n="app.tagline">الطقس والوقت، أينما كنت</p>
+      <div class="boot__bar" aria-hidden="true"><span></span></div>
+      <p class="visually-hidden" data-i18n="loader.preparing">نجهّز السماء…</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="shell header__inner">
+      <a class="brand" id="brand" href="#main" data-i18n-attr="aria-label:a11y.home">
+        <span class="brand__mark" id="brand-logo" aria-hidden="true"></span>
+        <span class="brand__text">
+          <span class="brand__name" data-i18n="app.name">أجواء</span>
+          <span class="brand__tagline" data-i18n="app.tagline">الطقس والوقت، أينما كنت</span>
+        </span>
+      </a>
+
+      <div class="header__actions">
+        <div class="lang-switch" role="group" data-i18n-attr="aria-label:a11y.language">
+          <button type="button" data-lang="ar" lang="ar" aria-pressed="true">AR</button>
+          <button type="button" data-lang="en" lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="icon-btn" id="btn-search" type="button" aria-label="ابحث عن مدينة" data-i18n-attr="aria-label:a11y.search" data-i18n-title="header.search">
+          <span id="icon-search" aria-hidden="true"></span>
+        </button>
+        <button class="icon-btn theme-btn" id="btn-theme" type="button" aria-label="تبديل المظهر" data-i18n-attr="aria-label:a11y.theme" data-i18n-title="header.theme" aria-pressed="false">
+          <span id="icon-theme" aria-hidden="true"></span>
+        </button>
+        <button class="icon-btn" id="btn-settings" type="button" aria-label="الإعدادات" data-i18n-attr="aria-label:a11y.settings" data-i18n-title="header.settings">
+          <span id="icon-settings" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main" id="main" tabindex="-1">
+    <div class="shell">
+      <h1 class="visually-hidden" data-i18n="app.tagline">الطقس والوقت، أينما كنت</h1>
+      <div id="app-banner"></div>
+      <div id="app-content"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer__inner" id="site-footer"></div>
+  </footer>
+
+  <div class="ptr" id="ptr" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+      <path d="M12 4v16M6 14l6 6 6-6"/>
+    </svg>
+    <span data-i18n="hero.pull">اسحب للتحديث</span>
+  </div>
+
+  <div id="sheets-root"></div>
+  <div class="toast-root" id="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <div class="noscript card">
+      <strong>JavaScript مطلوب · JavaScript required</strong>
+      <p>يعتمد أجواء على JavaScript لجلب الطقس وعرض الوقت المحلي. يرجى تفعيله ثم إعادة تحميل الصفحة.</p>
+      <p lang="en" dir="ltr">Ajwaa needs JavaScript to fetch the weather and render local time. Please enable it and reload the page.</p>
+    </div>
+  </noscript>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
